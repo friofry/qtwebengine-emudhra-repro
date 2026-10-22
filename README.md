@@ -43,6 +43,8 @@ $ ./build/qtbug58059_repro
 qml: RESULT=VULNERABLE_LOAD_SUCCEEDED certErrorSeen=false url=https://testovg3.emsign.com/RootOVG3.html
 ```
 
+*(Note: `https://testovg3.emsign.com/` is eMudhra's public demonstration page for the `emSign ECC Root CA - G3` hierarchy, which 302-redirects `/` to `/RootOVG3.html`. We also verified the exact forged-leaf scenario signed by the compromised `EM OV TLS CA - G3C` intermediate against a local HTTPS server via `EMUDHRA_TEST_URL=https://... ./build/qtbug58059_repro`; the certificate-forging script is intentionally omitted from this public repository.)*
+
 ### 2. With Chrome Root Store constraint workaround (`--fix`)
 
 Passes `--test-crs-constraints=86a1ecba089c4a8d3bbe2734c612ba341d813e043cf9e8a862cd5c57a36bbe6b:maxversionexclusive=0` via `QTWEBENGINE_CHROMIUM_FLAGS` before `QtWebEngineQuick::initialize()`:

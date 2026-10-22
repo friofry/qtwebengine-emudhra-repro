@@ -1,5 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include <QUrl>
 #include <QtWebEngineQuick>
 #include <cstring>
 
@@ -37,7 +39,12 @@ int main(int argc, char *argv[])
     QtWebEngineQuick::initialize();
     QGuiApplication app(argc, argv);
 
+    const QUrl targetUrl = QUrl::fromUserInput(
+        qEnvironmentVariable("EMUDHRA_TEST_URL", QStringLiteral("https://testovg3.emsign.com/")));
+
     QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty(QStringLiteral("initialTargetUrl"), targetUrl);
+
     const QByteArray qml = R"QML(
         import QtQuick
         import QtQuick.Window
@@ -47,13 +54,11 @@ int main(int argc, char *argv[])
             width: 800
             height: 600
             visible: true
-            property string targetUrl: Qt.application.environment
-                ? "https://testovg3.emsign.com/" : "https://testovg3.emsign.com/"
             property bool certErrorSeen: false
 
             WebEngineView {
                 anchors.fill: parent
-                url: "https://testovg3.emsign.com/"
+                url: initialTargetUrl
 
                 onCertificateError: function(error) {
                     certErrorSeen = true
