@@ -26,15 +26,13 @@ flowchart TD
 ```bash
 git clone https://github.com/friofry/qtwebengine-emudhra-repro.git /tmp/qtwebengine-emudhra-repro && \
 cd /tmp/qtwebengine-emudhra-repro && \
-cmake -DCMAKE_PREFIX_PATH="$HOME/Qt/6.11.0/macos" -B build -S . && \
+cmake -DCMAKE_PREFIX_PATH="$(qmake6 -query QT_INSTALL_PREFIX 2>/dev/null || qmake -query QT_INSTALL_PREFIX)" -B build -S . && \
 cmake --build build && \
 echo "--- WITHOUT FIX (vulnerable) ---" && \
 ./build/qtbug58059_repro && \
 echo "--- WITH --fix (blocked) ---" && \
 ./build/qtbug58059_repro --fix
 ```
-
-*(Adjust `-DCMAKE_PREFIX_PATH` to your local Qt 6 installation path on macOS, Linux, or Windows.)*
 
 ## Expected Output
 
